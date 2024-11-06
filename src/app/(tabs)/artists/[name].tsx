@@ -2,13 +2,26 @@ import { ArtistTracksList } from "@/components/ArtistTracksList";
 import { screenPadding } from "@/constants/tokens";
 import { useArtists } from "@/store/library";
 import { defaultStyles } from "@/styles";
-import { Redirect, useLocalSearchParams } from "expo-router";
+import { useRoute } from "@react-navigation/native";
+import { Redirect, useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 
 const ArtistDetailScreen = () => {
   const { name: artistName } = useLocalSearchParams<{ name: string }>();
   const artists = useArtists();
   const artist = artists.find((artist) => artist.name === artistName);
+
+  const route = useRoute(); // Access the route object to get the screen options
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (navigation && route) {
+      navigation.setOptions({
+        title: artist ? artist.name : "Artist Details", // Dynamically change the title based on the artist
+      });
+    }
+  }, [navigation, route, artist]);
 
   if (!artist) {
     console.warn(`Artist ${artistName} Not Found`);
