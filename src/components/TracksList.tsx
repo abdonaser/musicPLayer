@@ -13,10 +13,12 @@ import { utilsStyles } from "@/styles";
 import TrackPlayer, { Track } from "react-native-track-player";
 import { unknownTrackImageUri } from "@/constants/images";
 import { useQueue } from "@/store/queue";
+import { QueueControls } from "./QueueControls";
 
 export type TracksListProps = Partial<FlatListProps<Track>> & {
   id: string;
   tracks: Track[];
+  hideQueueControls?: boolean;
 };
 
 const ItemDivider = () => {
@@ -31,7 +33,12 @@ const ItemDivider = () => {
   );
 };
 
-const TracksList = ({ id, tracks, ...flatlistProps }: TracksListProps) => {
+const TracksList = ({
+  id,
+  tracks,
+  hideQueueControls = false,
+  ...flatlistProps
+}: TracksListProps) => {
   //' the id is referring to the active screen {Screen_Name}
   const queueOffset = useRef(0);
   const { activeQueueId, setActiveQueueId } = useQueue();
@@ -81,6 +88,11 @@ const TracksList = ({ id, tracks, ...flatlistProps }: TracksListProps) => {
       renderItem={({ item: track }) => (
         <TracksListItem track={track} onTrackSelect={handelTrackSelect} />
       )}
+      ListHeaderComponent={
+        !hideQueueControls ? (
+          <QueueControls tracks={tracks} style={{ paddingBottom: 20 }} />
+        ) : undefined
+      }
       ItemSeparatorComponent={ItemDivider}
       ListEmptyComponent={
         <View style={styles.emptyContainer}>
