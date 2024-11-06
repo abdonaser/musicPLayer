@@ -2,6 +2,7 @@ import { colors } from "@/constants/tokens";
 import { useTrackPlayerVolume } from "@/hooks/useTrackPlayerVolume";
 import { utilsStyles } from "@/styles";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import { View, ViewProps } from "react-native";
 import { Slider } from "react-native-awesome-slider";
 import { useSharedValue } from "react-native-reanimated";
@@ -14,12 +15,20 @@ export const PlayerVolumeBar = ({ style }: ViewProps) => {
   const max = useSharedValue(1);
 
   progress.value = volume ?? 0;
-
+  const [volumeFlag, setVolumeFlag] = useState(progress.value);
   return (
     <View style={style}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Ionicons
-          name="volume-low"
+          name={
+            volumeFlag === 0
+              ? "volume-mute"
+              : volumeFlag < 0.5
+                ? "volume-low"
+                : volumeFlag < 1
+                  ? "volume-medium"
+                  : "volume-high"
+          }
           size={20}
           color={colors.icon}
           style={{ opacity: 0.8 }}
@@ -32,6 +41,9 @@ export const PlayerVolumeBar = ({ style }: ViewProps) => {
             maximumValue={max}
             containerStyle={utilsStyles.slider}
             onValueChange={(value) => {
+              setVolumeFlag(value <= min.value ? 0 : value);
+              console.log("value ", value, " ", volumeFlag);
+              progress.value = value <= min.value ? 0 : value;
               updateVolume(value);
             }}
             renderBubble={() => null}

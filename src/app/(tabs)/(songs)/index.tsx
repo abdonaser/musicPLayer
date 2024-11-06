@@ -7,6 +7,8 @@ import SearchInput from "@/components/SearchInput";
 import { useMemo } from "react";
 import { trackTitleFilter } from "@/helpers/filter";
 import library from "@/assets/data/library.json";
+import { useTracks } from "@/store/library";
+import { generateTracksListId } from "@/helpers/miscellaneous";
 
 const SongsScreen = () => {
   const { search, handleOnChangeText } = useNavigationSearch({
@@ -15,11 +17,13 @@ const SongsScreen = () => {
     },
   });
 
+  const tracks = useTracks();
+
   const filteredTracks = useMemo(() => {
-    if (!search) return library;
+    if (!search) return tracks;
     return library.filter(trackTitleFilter(search));
-  }, [search]);
-  
+  }, [search, tracks]);
+
   return (
     <View style={defaultStyles.container}>
       {Platform.OS === "android" && (
@@ -36,7 +40,10 @@ const SongsScreen = () => {
         style={{
           paddingHorizontal: screenPadding.horizontal,
         }}>
-        <TracksList tracks={filteredTracks} />
+        <TracksList
+          id={generateTracksListId("songs", search)}
+          tracks={filteredTracks}
+        />
       </ScrollView>
     </View>
   );

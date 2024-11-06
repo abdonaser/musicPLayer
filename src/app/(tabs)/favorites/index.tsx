@@ -1,6 +1,5 @@
 import { defaultStyles } from "@/styles";
 import { Platform, Text, View } from "react-native";
-import library from "@/assets/data/library.json";
 import { ScrollView } from "react-native-gesture-handler";
 import { screenPadding } from "@/constants/tokens";
 import TracksList from "@/components/TracksList";
@@ -9,21 +8,22 @@ import { useMemo } from "react";
 import { trackTitleFilter } from "@/helpers/filter";
 import SearchInput from "@/components/SearchInput";
 import { useFavorites, useTracks } from "@/store/library";
+import { generateTracksListId } from "@/helpers/miscellaneous";
+
 const FavoritesScreen = () => {
-	
   const { search, handleOnChangeText } = useNavigationSearch({
     searchBarOptions: {
       placeholder: "Find in songs",
     },
   });
-  const favoritesTracks = useMemo(() => {
-    return library.filter((track) => track.rating === 1);
-  }, []);
 
-  const filteredTracks = useMemo(() => {
+  const favoritesTracks = useFavorites().favorites;
+
+  const filteredFavoritesTracks = useMemo(() => {
     if (!search) return favoritesTracks;
     return favoritesTracks.filter(trackTitleFilter(search));
-  }, [search]);
+  }, [search, favoritesTracks]);
+
   return (
     <View style={defaultStyles.container}>
       {Platform.OS === "android" && (
@@ -36,7 +36,11 @@ const FavoritesScreen = () => {
       <ScrollView
         style={{ paddingHorizontal: screenPadding.horizontal }}
         contentInsetAdjustmentBehavior="automatic">
-        <TracksList scrollEnabled={false} tracks={filteredTracks} />
+        <TracksList
+          id={generateTracksListId("favorites", search)}
+          scrollEnabled={false}
+          tracks={filteredFavoritesTracks}
+        />
       </ScrollView>
     </View>
   );
