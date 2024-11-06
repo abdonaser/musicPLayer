@@ -23,8 +23,6 @@ progress 0.35
 
  
 */ 
-console.log(3.5 / 10);
-
 
   if (!isSliding.value) {
     progress.value = duration > 0 ? position / duration : 0;

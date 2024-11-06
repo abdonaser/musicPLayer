@@ -2,6 +2,7 @@ import { TrackWithPlaylist } from "@/helpers/types";
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
 import library from "@/assets/data/library.json";
+import { useMemo } from "react";
 
 interface libraryState {
   tracks: TrackWithPlaylist[];
@@ -18,8 +19,14 @@ export const useLibraryStore = create<libraryState>()((set) => ({
 export const useTracks = () => useLibraryStore((state) => state.tracks);
 
 export const useFavorites = () => {
-  const favorites = useLibraryStore((state) =>
-    state.tracks.filter((track) => track.rating === 1)
+  // const favorites = useLibraryStore((state) =>
+  //   state.tracks.filter((track) => track.rating === 1)
+  // );
+
+  const favorites = useMemo(
+    () =>
+      useLibraryStore.getState().tracks.filter((track) => track.rating === 1),
+    [useLibraryStore]
   );
 
   const toggleTrackFavorite = useLibraryStore(
