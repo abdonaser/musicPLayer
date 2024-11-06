@@ -2,7 +2,7 @@ import { colors } from "@/constants/tokens";
 import { useTrackPlayerVolume } from "@/hooks/useTrackPlayerVolume";
 import { utilsStyles } from "@/styles";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, ViewProps } from "react-native";
 import { Slider } from "react-native-awesome-slider";
 import { useSharedValue } from "react-native-reanimated";
@@ -15,7 +15,11 @@ export const PlayerVolumeBar = ({ style }: ViewProps) => {
   const max = useSharedValue(1);
 
   progress.value = volume ?? 0;
-  const [volumeFlag, setVolumeFlag] = useState(progress.value);
+  const [volumeFlag, setVolumeFlag] = useState<number>(volume ?? 0);
+  useEffect(() => {
+    setVolumeFlag(volume ?? 0);
+  }, [volume]);
+
   return (
     <View style={style}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
