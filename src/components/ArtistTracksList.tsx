@@ -9,9 +9,10 @@ import { Artist } from "@/helpers/types";
 import { useNavigationSearch } from "@/hooks/useNavigationSearch";
 import { defaultStyles } from "@/styles";
 import { useMemo } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import { QueueControls } from "./QueueControls";
 import TracksList from "./TracksList";
+import SearchInput from "./SearchInput";
 
 export const ArtistTracksList = ({ artist }: { artist: Artist }) => {
   const { search, handleOnChangeText } = useNavigationSearch({
@@ -23,6 +24,7 @@ export const ArtistTracksList = ({ artist }: { artist: Artist }) => {
   const filteredArtistTracks = useMemo(() => {
     return artist.tracks.filter(trackTitleFilter(search));
   }, [search, artist.tracks]);
+
   return (
     <TracksList
       id={generateTracksListId(artist.name, search)}
