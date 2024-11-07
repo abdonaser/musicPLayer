@@ -1,8 +1,9 @@
-import { Artist, TrackWithPlaylist } from "@/helpers/types";
+import { Artist, Playlist, TrackWithPlaylist } from "@/helpers/types";
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
 import library from "@/assets/data/library.json";
 import { useMemo } from "react";
+import { unknownTrackImageUri } from "@/constants/images";
 interface libraryState {
   tracks: TrackWithPlaylist[];
   toggleTrackFavorite: (track: Track) => void;
@@ -54,4 +55,35 @@ export const useArtists = () => {
   }, [tracks]);
 
   return artists;
+};
+
+//'Playlists
+export const usePlaylists = () => {
+  const tracks = useLibraryStore((state) => state.tracks);
+
+  const playlists = useMemo(() => {
+    return tracks.reduce((acc, track) => {
+      if (track.playlist) {
+        track.playlist?.forEach((playlistName) => {
+          const existingPlaylist = acc.find(
+            (track) => track.name === playlistName
+          );
+          if (existingPlaylist) {
+            existingPlaylist.tracks.push(track);
+          } else {
+            acc.push({
+              name: playlistName,
+              tracks: [track],
+              artworkPreview: track.artwork ?? unknownTrackImageUri,
+            });
+          }
+        });
+      }
+      return acc;
+    }, [] as Playlist[]);
+  }, [tracks]);
+
+  const addToPlaylist = useLibraryStore((state) => state.addToPlaylist);
+
+  return { playlists, addToPlaylist };
 };

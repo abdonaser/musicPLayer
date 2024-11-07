@@ -12,13 +12,13 @@ const ArtistDetailScreen = () => {
   const artists = useArtists();
   const artist = artists.find((artist) => artist.name === artistName);
 
-  const route = useRoute(); // Access the route object to get the screen options
+  const route = useRoute();
   const navigation = useNavigation();
 
   useEffect(() => {
     if (navigation && route) {
       navigation.setOptions({
-        title: artist ? artist.name : "Artist Details", // Dynamically change the title based on the artist
+        title: artist ? artist.name : "Artist Details",
       });
     }
   }, [navigation, route, artist]);

@@ -1,53 +1,55 @@
-import { colors } from "@/constants/tokens";
-import { defaultStyles, utilsStyles } from "@/styles";
-import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Slider } from "react-native-awesome-slider";
-import { useSharedValue } from "react-native-reanimated";
+import { PlaylistsList } from "@/components/PlaylistsList";
+import SearchInput from "@/components/SearchInput";
+import { screenPadding } from "@/constants/tokens";
+import { playlistNameFilter } from "@/helpers/filter";
+import { Playlist } from "@/helpers/types";
+import { useNavigationSearch } from "@/hooks/useNavigationSearch";
+import { usePlaylists } from "@/store/library";
+import { defaultStyles } from "@/styles";
+import { useRouter } from "expo-router";
+import { useMemo } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 const PlaylistsScreen = () => {
-  const isSliding = useSharedValue(false);
-  const [price, setPrice] = useState(0);
-  const progress = useSharedValue(0);
-  const min = useSharedValue(0);
-  const max = useSharedValue(10);
-  const handle = (value: number) => {
-    setPrice(progress.value);
+  const router = useRouter();
+  const { search, handleOnChangeText } = useNavigationSearch({
+    searchBarOptions: {
+      placeholder: "Find in songs",
+    },
+  });
+
+  const { playlists } = usePlaylists();
+
+  const filteredPlaylists = useMemo(() => {
+    if (!search) return playlists;
+    return playlists.filter(playlistNameFilter(search));
+  }, [search, playlists]);
+
+  const handlePlaylistPress = (playlist: Playlist) => {
+    router.push(`/(tabs)/playlists/${playlist.name}`);
   };
   return (
     <View style={defaultStyles.container}>
-      <Text style={defaultStyles.text}>Playlists Screen</Text>
-      <View style={styles.boxContainer}>
-        <Text style={[defaultStyles.text, { textAlign: "center" }]}>
-          {price}
-        </Text>
-        <Slider
-          progress={progress}
-          minimumValue={min}
-          maximumValue={max}
-          containerStyle={utilsStyles.slider}
-          theme={{
-            minimumTrackTintColor: "#fff",
-            maximumTrackTintColor: "red",
-          }}
-          onSlidingStart={() => (isSliding.value = true)}
-          onValueChange={async (value) => {
-            await handle(value);
-          }}
+      {Platform.OS === "android" && (
+        <SearchInput
+          value={search}
+          placeholder="Find in songs"
+          onChangeText={handleOnChangeText}
         />
-      </View>
+      )}
+
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={{ paddingHorizontal: screenPadding.horizontal }}>
+        <PlaylistsList
+          scrollEnabled={false}
+          playlists={filteredPlaylists}
+          onPlaylistPress={handlePlaylistPress}
+        />
+      </ScrollView>
     </View>
   );
 };
-const styles = StyleSheet.create({
-  boxContainer: {
-    width: "95%",
-    height: 200,
-    margin: "auto",
-    textAlign: "center",
-    borderWidth: 1,
-    padding: 5,
-    borderColor: "#fff",
-  },
-});
+const styles = StyleSheet.create({});
 export default PlaylistsScreen;

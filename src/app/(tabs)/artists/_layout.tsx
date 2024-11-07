@@ -18,7 +18,6 @@ const ArtistsScreenLayout = () => {
         <Stack.Screen
           name="[name]"
           options={{
-            headerTitle: "Artist",
             headerBackVisible: true,
             headerStyle: {
               backgroundColor: colors.background,
