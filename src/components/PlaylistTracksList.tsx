@@ -6,7 +6,6 @@ import { useNavigationSearch } from "@/hooks/useNavigationSearch";
 import { defaultStyles } from "@/styles";
 import { useMemo } from "react";
 import { Image, Platform, StyleSheet, Text, View } from "react-native";
-import FastImage from "react-native-fast-image";
 import { QueueControls } from "./QueueControls";
 import TracksList from "./TracksList";
 import SearchInput from "./SearchInput";
@@ -29,6 +28,8 @@ export const PlaylistTracksList = ({ playlist }: { playlist: Playlist }) => {
           value={search}
           placeholder="Find in playlist"
           onChangeText={handleOnChangeText}
+          style={{ paddingHorizontal: 0 }}
+          leftPosition={{ left: 8 }}
         />
       )}
       <TracksList

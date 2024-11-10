@@ -6,9 +6,13 @@ import { SplashScreen } from "expo-router";
 import { useCallback } from "react";
 import { useLogTrackPlayerState } from "@/hooks/useLogTrackPlayerState";
 import { useSetupTrackPlayer } from "@/hooks/useSetupTrackPlayer";
-
+import { MenuView } from "@react-native-menu/menu";
+import { PaperProvider } from "react-native-paper";
+import { colors } from "@/constants/tokens";
+import { playbackService } from "@/constants/playbackService";
+import TrackPlayer from "react-native-track-player";
 SplashScreen.preventAutoHideAsync();
-
+TrackPlayer.registerPlaybackService(() => playbackService);
 const App = () => {
   const handleTrackPlayerLoaded = useCallback(() => {
     SplashScreen.hideAsync();
@@ -21,8 +25,10 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <RootNavigation />
-        <StatusBar style="auto" />
+        <PaperProvider>
+          <RootNavigation />
+          <StatusBar style="auto" />
+        </PaperProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
@@ -40,6 +46,19 @@ const RootNavigation = () => {
           gestureDirection: "vertical",
           animationDuration: 400,
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="(modals)/addToPlaylist"
+        options={{
+          presentation: "modal",
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitle: "Add to playlist",
+          headerTitleStyle: {
+            color: colors.text,
+          },
         }}
       />
     </Stack>

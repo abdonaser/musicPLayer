@@ -21,7 +21,7 @@ export const PlaylistListItem = ({
 }: PlaylistListItemProps) => {
   return (
     <TouchableHighlight activeOpacity={0.8} {...props}>
-      <View style={styles.playlistItemContainer}>
+      <View style={[styles.playlistItemContainer]}>
         <View>
           <Image
             source={{
