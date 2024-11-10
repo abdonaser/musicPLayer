@@ -13,6 +13,8 @@ import { PlayerControls } from "@/components/PlayerControls";
 import { PlayerProgressBar } from "@/components/PlayerProgressbar";
 import { PlayerVolumeBar } from "@/components/PlayerVolumeBar";
 import { PlayerRepeatToggle } from "@/components/PlayerRepeatToggle";
+import { useFavorites } from "@/store/library";
+import { useTrackPlayerFavorite } from "@/hooks/useTrackPlayerFavorite";
 // import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 // import { LinearGradient } from "expo-linear-gradient";
 
@@ -33,11 +35,9 @@ const PlayerScreen = () => {
   // );
 
   const { top, bottom } = useSafeAreaInsets();
-
-  const isFavorite = false;
-  const toggleFavorite = () => {
-    console.log("toggleFavorite");
-  };
+  // const { toggleTrackFavorite } = useFavorites();
+  // const isFavorite = activeTrack?.rating;
+  const { isFavorite, toggleFavorite } = useTrackPlayerFavorite();
 
   if (!activeTrack) {
     return (
@@ -54,74 +54,74 @@ const PlayerScreen = () => {
     //     imageColors
     //       ? [imageColors.dominant, imageColors.average]
     //       : [colors.background]
-    //   }> 
+    //   }>
 
-      <View style={styles.overlayContainer}>
-        <DismissPlayerSymbol />
+    <View style={styles.overlayContainer}>
+      <DismissPlayerSymbol />
 
-        <View
-          style={{
-            flex: 1,
-            marginTop: top + 70,
-            marginBottom: bottom,
-          }}>
-          <View style={styles.artworkImageContainer}>
-            <Image
-              source={{ uri: activeTrack.artwork ?? unknownTrackImageUri }}
-              resizeMode="cover"
-              style={styles.artworkImage}
-            />
-          </View>
+      <View
+        style={{
+          flex: 1,
+          marginTop: top + 70,
+          marginBottom: bottom,
+        }}>
+        <View style={styles.artworkImageContainer}>
+          <Image
+            source={{ uri: activeTrack.artwork ?? unknownTrackImageUri }}
+            resizeMode="cover"
+            style={styles.artworkImage}
+          />
+        </View>
 
-          <View style={{ flex: 1 }}>
-            <View style={{ marginTop: "auto" }}>
-              <View style={{ height: 60 }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}>
-                  {/* Track title */}
-                  <View style={styles.trackTitleContainer}>
-                    {/* <Text style={styles.trackTitleText}>{activeTrack.title}</Text> */}
-                    <MovingText
-                      text={activeTrack.title ?? ""}
-                      animationThreshold={30}
-                      style={styles.trackTitleText}
-                    />
-                  </View>
-
-                  {/* Favorite button icon */}
-                  <FontAwesome
-                    name={isFavorite ? "heart" : "heart-o"}
-                    size={20}
-                    color={isFavorite ? colors.primary : colors.icon}
-                    style={{ marginHorizontal: 14 }}
-                    onPress={toggleFavorite}
+        <View style={{ flex: 1 }}>
+          <View style={{ marginTop: "auto" }}>
+            <View style={{ height: 60 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}>
+                {/* Track title */}
+                <View style={styles.trackTitleContainer}>
+                  {/* <Text style={styles.trackTitleText}>{activeTrack.title}</Text> */}
+                  <MovingText
+                    text={activeTrack.title ?? ""}
+                    animationThreshold={30}
+                    style={styles.trackTitleText}
                   />
                 </View>
-                {/* Track artist */}
-                {activeTrack.artist && (
-                  <Text
-                    numberOfLines={1}
-                    style={[styles.trackArtistText, { marginTop: 6 }]}>
-                    {activeTrack.artist}
-                  </Text>
-                )}
+
+                {/* Favorite button icon */}
+                <FontAwesome
+                  name={isFavorite ? "heart" : "heart-o"}
+                  size={20}
+                  color={isFavorite ? colors.primary : colors.icon}
+                  style={{ marginHorizontal: 14 }}
+                  onPress={toggleFavorite}
+                />
               </View>
-              <PlayerProgressBar style={{ marginTop: 32 }} />
-
-              <PlayerControls style={{ marginTop: 40 }} />
+              {/* Track artist */}
+              {activeTrack.artist && (
+                <Text
+                  numberOfLines={1}
+                  style={[styles.trackArtistText, { marginTop: 6 }]}>
+                  {activeTrack.artist}
+                </Text>
+              )}
             </View>
-            <PlayerVolumeBar style={{ marginTop: "auto", marginBottom: 30 }} />
+            <PlayerProgressBar style={{ marginTop: 32 }} />
 
-            <View style={utilsStyles.centeredRow}>
-              <PlayerRepeatToggle size={30} style={{ marginBottom: 6 }} />
-            </View>
+            <PlayerControls style={{ marginTop: 40 }} />
+          </View>
+          <PlayerVolumeBar style={{ marginTop: "auto", marginBottom: 30 }} />
+
+          <View style={utilsStyles.centeredRow}>
+            <PlayerRepeatToggle size={30} style={{ marginBottom: 6 }} />
           </View>
         </View>
       </View>
+    </View>
     // </LinearGradient>
   );
 };
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   overlayContainer: {
     ...defaultStyles.container,
     paddingHorizontal: screenPadding.horizontal,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.7)",
   },
   artworkImageContainer: {
     shadowOffset: {

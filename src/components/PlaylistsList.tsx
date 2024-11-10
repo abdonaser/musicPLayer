@@ -16,6 +16,7 @@ import { useMemo } from "react";
 import { playlistNameFilter } from "@/helpers/filter";
 import { unknownArtistImageUri } from "@/constants/images";
 import { PlaylistListItem } from "./PlaylistListItem";
+import { beginAsyncEvent } from "react-native/Libraries/Performance/Systrace";
 type playlistsListProps = {
   playlists: Playlist[];
   onPlaylistPress: (playlist: Playlist) => void;

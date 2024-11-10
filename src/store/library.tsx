@@ -2,7 +2,7 @@ import { Artist, Playlist, TrackWithPlaylist } from "@/helpers/types";
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
 import library from "@/assets/data/library.json";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { unknownTrackImageUri } from "@/constants/images";
 interface libraryState {
   tracks: TrackWithPlaylist[];
@@ -12,18 +12,41 @@ interface libraryState {
 //' Main Store
 export const useLibraryStore = create<libraryState>()((set) => ({
   tracks: library,
-  toggleTrackFavorite: () => {},
-  addToPlaylist: () => {},
+  toggleTrackFavorite: (track) =>
+    set((state) => ({
+      tracks: state.tracks.map((currentTrack) => {
+        if (currentTrack.url === track.url) {
+          console.log("cccc ", track.rating);
+          return {
+            ...currentTrack,
+            rating: currentTrack.rating === 1 ? 0 : 1,
+          };
+        }
+        return currentTrack;
+      }),
+    })),
+  addToPlaylist: (track, playlistName) =>
+    set((state) => ({
+      tracks: state.tracks.map((currentTrack) => {
+        if (currentTrack.url === track.url) {
+          return {
+            ...currentTrack,
+            playlist: [...(currentTrack.playlist ?? []), playlistName],
+          };
+        }
+        return currentTrack;
+      }),
+    })),
 }));
 
 export const useTracks = () => useLibraryStore((state) => state.tracks);
 
 //' Favorites
 export const useFavorites = () => {
+  const tracks = useLibraryStore((state) => state.tracks);
   const favorites = useMemo(
-    () =>
-      useLibraryStore.getState().tracks.filter((track) => track.rating === 1),
-    [useLibraryStore]
+    () => tracks.filter((track) => track.rating === 1),
+    [tracks]
   );
 
   const toggleTrackFavorite = useLibraryStore(
