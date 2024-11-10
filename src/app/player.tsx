@@ -116,7 +116,7 @@ const PlayerScreen = () => {
           </View>
           <PlayerVolumeBar style={{ marginTop: "auto", marginBottom: 30 }} />
 
-          <View style={utilsStyles.centeredRow}>
+          <View style={[utilsStyles.centeredRow, { marginBottom: 30 }]}>
             <PlayerRepeatToggle size={30} style={{ marginBottom: 6 }} />
           </View>
         </View>
@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
   overlayContainer: {
     ...defaultStyles.container,
     paddingHorizontal: screenPadding.horizontal,
-    backgroundColor: "rgba(0,0,0,0.7)",
+    backgroundColor: "rgba(0,0,0,0.8)",
+    // backgroundColor: "rgba(40,41,30,1)",
   },
   artworkImageContainer: {
     shadowOffset: {
