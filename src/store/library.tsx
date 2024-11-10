@@ -16,7 +16,6 @@ export const useLibraryStore = create<libraryState>()((set) => ({
     set((state) => ({
       tracks: state.tracks.map((currentTrack) => {
         if (currentTrack.url === track.url) {
-          console.log("cccc ", track.rating);
           return {
             ...currentTrack,
             rating: currentTrack.rating === 1 ? 0 : 1,
