@@ -76,8 +76,8 @@ const ArtistsScreen = () => {
           data={filteredArtists}
           renderItem={({ item: artist }) => {
             return (
-              <Link href={`/artists/${artist.name}`}>
-                <TouchableHighlight activeOpacity={0.8}>
+              <TouchableHighlight activeOpacity={0.8}>
+                <Link href={`/artists/${artist.name}`}>
                   <View style={styles.artistItemContainer}>
                     <View>
                       <Image
@@ -95,8 +95,8 @@ const ArtistsScreen = () => {
                       </Text>
                     </View>
                   </View>
-                </TouchableHighlight>
-              </Link>
+                </Link>
+              </TouchableHighlight>
             );
           }}
         />
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     columnGap: 14,
     alignItems: "center",
+    width: 200,
   },
   artistImage: {
     borderRadius: 32,
