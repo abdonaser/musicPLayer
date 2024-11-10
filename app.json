@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Music Player",
-    "slug": "Music Player",
+    "slug": "music_player_V2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/favicon-1.png",
