@@ -46,7 +46,6 @@ export const PlayerVolumeBar = ({ style }: ViewProps) => {
             containerStyle={utilsStyles.slider}
             onValueChange={(value) => {
               setVolumeFlag(value <= min.value ? 0 : value);
-              console.log("value ", value, " ", volumeFlag);
               progress.value = value <= min.value ? 0 : value;
               updateVolume(value);
             }}

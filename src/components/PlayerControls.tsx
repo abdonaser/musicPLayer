@@ -1,5 +1,6 @@
 import { colors } from "@/constants/tokens";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import TrackPlayer, { useIsPlaying } from "react-native-track-player";
 
@@ -30,17 +31,21 @@ export const PlayPauseButton = ({
   style,
 }: PlayerButtonProps) => {
   const { playing } = useIsPlaying();
+  const [isActive, setIsActive] = useState(false);
+
   return (
     <View style={[{ height: iconSize }, style]}>
       <TouchableOpacity
         activeOpacity={0.85}
-        onPress={() => {
+        onPress={async () => {
+          setIsActive(true);
           playing ? TrackPlayer.pause() : TrackPlayer.play();
+          await setIsActive(false);
         }}>
         <FontAwesome6
           name={playing ? "pause" : "play"}
           size={iconSize}
-          color={colors.text}
+          color={isActive ? "gray" : colors.text}
         />
       </TouchableOpacity>
     </View>
@@ -48,21 +53,39 @@ export const PlayPauseButton = ({
 };
 
 export const SkipToNextButton = ({ iconSize = 30 }: PlayerButtonProps) => {
+  const [isActive, setIsActive] = useState(false);
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={() => TrackPlayer.skipToNext()}>
-      <FontAwesome6 name="forward" size={iconSize} color={colors.text} />
+      activeOpacity={0.95}
+      onPress={async () => {
+        setIsActive(true);
+        await TrackPlayer.skipToNext();
+        await setIsActive(false);
+      }}>
+      <FontAwesome6
+        name="forward"
+        size={iconSize}
+        color={isActive ? "gray" : colors.text}
+      />
     </TouchableOpacity>
   );
 };
 
 export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
+  const [isActive, setIsActive] = useState(false);
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={() => TrackPlayer.skipToPrevious()}>
-      <FontAwesome6 name={"backward"} size={iconSize} color={colors.text} />
+      onPress={async () => {
+        setIsActive(true);
+        await TrackPlayer.skipToPrevious();
+        await setIsActive(false);
+      }}>
+      <FontAwesome6
+        name={"backward"}
+        size={iconSize}
+        color={isActive ? "gray" : colors.text}
+      />
     </TouchableOpacity>
   );
 };

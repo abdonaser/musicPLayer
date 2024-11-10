@@ -30,8 +30,6 @@ const AddToPlaylistModal = () => {
   const { activeQueueId } = useQueue();
 
   const track = tracks.find((currentTrack) => trackUrl === currentTrack.url);
-  console.log("track -> ", track);
-
   // track was not found
   if (!track) {
     return null;
